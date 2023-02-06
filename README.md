@@ -1,3 +1,7 @@
+Demo project for my talk about Component testing with Vitest
+
+Link to slides: [https://slides.com/mayashavin/component-testing-vitest/fullscreen](https://slides.com/mayashavin/component-testing-vitest/fullscreen)
+
 # vite-project
 
 This template should help get you started developing with Vue 3 in Vite.
@@ -31,5 +35,5 @@ npm run build
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
 
 ```sh
-npm run test:unit
+npm run test
 ```
