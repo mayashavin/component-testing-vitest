@@ -6,13 +6,15 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest --environment jsdom --root src/"
+    "test": "vitest --root src/",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "vue": "^3.2.45"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
+    "@vitest/coverage-istanbul": "^0.28.4",
     "@vue/test-utils": "^2.2.6",
     "jsdom": "^20.0.3",
     "vite": "^4.0.0",
