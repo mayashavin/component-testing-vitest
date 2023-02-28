@@ -3,8 +3,9 @@ import { useMovies } from "./useMovies";
 import { createApp } from "vue";
 import { flushPromises } from "@vue/test-utils";
 
-// 1. Mock global.fetch with vi.fn()
-global.fetch = vi.fn()
+// 1. Mock global.fetch with vi.fn() - not recommended way
+// global.fetch = vi.fn()
+
 // 2.Mock returned value of fetch
 function createMockResolveValue(data) {
     return { json: () => new Promise((resolve) => resolve(data)), ok: true };
@@ -28,25 +29,45 @@ function withSetup(hook) {
 }
 
 describe("useMovies", () => {
-  beforeAll(() => {
-    fetch.mockReturnValue(createMockResolveValue({
-        results: [
-            {
-                title: "A New Hope",
-            },
-        ]
-    }));
-  });
+//   beforeAll(() => {
+//     fetch.mockReturnValue(createMockResolveValue({
+//         results: [
+//             {
+//                 title: "A New Hope",
+//             },
+//         ]
+//     }));
+//   });
+    
+// 1. Mock global.fetch with vi.fn() - recommended way
+    const mockFetch = vi.spyOn(global, 'fetch');
 
-  it("should fetch movies", async () => {
-    // 5. Return & assert results to the test suit
-    const [results, app] = withSetup(useMovies);
+    beforeAll(() => {
 
-    // 2. Flush all asynchronous calls with flushPromises from @vue/test-utils
-    await flushPromises();
-    expect(results.movies.value.length).toEqual(1);
+        mockFetch.mockReturnValue(createMockResolveValue({
+            results: [
+                {
+                    title: "A New Hope",
+                },
+            ]
+        }));
+    })
 
-    // 6. Unmount the test app afterwards.
-    app.unmount();
-  });
+    it("should fetch movies", async () => {
+        // 5. Return & assert results to the test suit
+        const [results, app] = withSetup(useMovies);
+
+        // 2. Flush all asynchronous calls with flushPromises from @vue/test-utils
+        await flushPromises();
+        expect(results.movies.value.length).toEqual(1);
+        expect(mockFetch).toHaveBeenCalledTimes(1)
+        expect(mockFetch).toHaveBeenCalledWith("https://swapi.dev/api/films")
+
+        // 6. Unmount the test app afterwards.
+        app.unmount();
+    });
+
+    afterEach(() => {
+        mockFetch.mockClear();
+    })
 });
